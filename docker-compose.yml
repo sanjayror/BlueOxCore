@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  blueoxcore:
+    image: blueoxcore
+    build:
+      context: .
+      dockerfile: BlueOxCore/Dockerfile
