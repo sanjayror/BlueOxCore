@@ -296,7 +296,7 @@ namespace BlueOxCore
             catch (Exception ex)
             {
                 objResponse.StatusCode = 404;
-                objResponse.StatusText = ex.Message.ToString();
+                objResponse.StatusText = ex.Message.ToString() + ", Inner : " + ex.InnerException.Message.ToString();
             }
             return objResponse;
         }
