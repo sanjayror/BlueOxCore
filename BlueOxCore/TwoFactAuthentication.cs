@@ -14,32 +14,30 @@ using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using Newtonsoft.Json;
 using System.Drawing.Imaging;
+using Microsoft.Extensions.Configuration;
+using BlueOxCore.Model;
 
 namespace BlueOxCore
 {
     public class TwoFactAuthentication
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        private string strMongoDBUrl, strMongoDBName, strMongoDBTableName, ApplicationName = string.Empty;
-
+        private string strMongoDBUrl, strMongoDBName, strMongoDBTableName, strApplicationName, strUserName, strPassword = string.Empty;
+       
         MongoClient client = null;
         MongoServer server = null;
         MongoDatabase mongoDatabase = null;
 
         public TwoFactAuthentication()
         {
+            strMongoDBUrl = ConfigurationManager.AppSetting["MySettings:MongoDBUrl"].ToString();
+            strMongoDBName = ConfigurationManager.AppSetting["MySettings:MongoDBName"].ToString();
+            strMongoDBTableName = ConfigurationManager.AppSetting["MySettings:MongoDBTableName"].ToString();
+            strApplicationName = ConfigurationManager.AppSetting["MySettings:ApplicationName"].ToString();
+            strUserName = ConfigurationManager.AppSetting["MySettings:UserName"].ToString();
+            strPassword = ConfigurationManager.AppSetting["MySettings:Password"].ToString();
 
-            //strMongoDBUrl = ConfigurationManager.AppSettings["MongoDBUrl"];
-            //strMongoDBName = ConfigurationManager.AppSettings["MongoDBName"].ToString();
-            //strMongoDBTableName = ConfigurationManager.AppSettings["MongoDBTableName"].ToString();
-            //ApplicationName = ConfigurationManager.AppSettings["ApplicationName"].ToString();
-
-            strMongoDBUrl = "mongodb://192.168.12.179:27017";
-            strMongoDBName = "2FactAuthencation";
-            strMongoDBTableName = "2FactAuthencation";
-            ApplicationName = "PetroIT";
-
-            client = new MongoClient(strMongoDBUrl);
+            client = new MongoClient("mongodb://" + strUserName + ":" + strPassword + "@" + strMongoDBUrl + "/" + strMongoDBTableName);
             server = client.GetServer(); //No Need of This
             mongoDatabase = server.GetDatabase(strMongoDBName);
         }
@@ -47,7 +45,7 @@ namespace BlueOxCore
         public clsReturn Is2FAEnable(string UserName)
         {
             clsReturn objResponseMain = new clsReturn();
-
+            
             try
             {
                 var _success = false;
@@ -265,7 +263,7 @@ namespace BlueOxCore
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                HttpUtility.UrlEncode(ApplicationName),
+                HttpUtility.UrlEncode(strApplicationName),
                 HttpUtility.UrlEncode(UserName),
                 unformattedKey);
         }

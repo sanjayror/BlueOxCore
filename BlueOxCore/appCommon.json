@@ -1,0 +1,10 @@
+﻿{
+  "MySettings": {
+    "MongoDBUrl": "13.229.200.175:27017",
+    "MongoDBName": "2FactAuthencation",
+    "MongoDBTableName": "2FactAuthencation",
+    "ApplicationName": "PetroIT",
+    "UserName": "blueox",
+    "Password": "123456"
+  }
+}
